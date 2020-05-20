@@ -8,38 +8,9 @@ class Contact extends Component {
 	constructor(props) {
         super(props);
 
-        this.state = {
-            firstname: '',
-            lastname: '',
-            telnum: '',
-            email: '',
-            agree: false,
-            contactType: 'Tel.',
-            message: '',
-            touched: {
-            	firstname : false,
-            	lastname : false,
-            	telnum : false,
-            	email : false
-            }
-        };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleBlur = this.handleBlur.bind(this);
         
     }
-
-        handleInputChange(event) 
-        {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-    
-        this.setState({
-          [name]: value
-        });
-    	}
 
     handleSubmit(event) {
         console.log('Current State is: ' + JSON.stringify(this.state));
@@ -48,40 +19,8 @@ class Contact extends Component {
     }
 
 
-    handleBlur = (field) => (evt) => {
-    	this.setState({
-    		touched:{ ...this.state.touched, [field]:true}
-    	});
-    }
-
-    validate(firstname, lastname, telnum, email){
-    	const errors = {
-    		firstname: '',
-            lastname: '',
-            telnum: '',
-            email: ''
-    	};
-
-    	if(this.state.touched.firstname && firstname.length < 3)
-    		errors.firstname = "first name should be atleast 3 character";
-
-    	if(this.state.touched.lastname && lastname.length < 3)
-    		errors.lastname = "last name should be atleast 3 character";
-
-    	const reg = /^\d+$/;
-    	if(this.state.touched.telnum && !reg.test(telnum))
-    		errors.telnum = "Contain only numbers";
-
-    	if(this.state.touched.email && email.split('').filter(x => x === '@').length !== 1)
-    		errors.email = " email should Contain @ ";
-
-    	return errors;
-
-    }
-
 	render(){
 
-		const errors = this.validate(this.state.firstname, this.state.lastname, this.state.telnum, this.state.email);
     return(
         <div className="container">
             <div className="row row-content">
@@ -117,6 +56,7 @@ class Contact extends Component {
                       <h3>Send us your Feedback</h3>
                    </div>
                     <div className="col-12 col-md-9">
+
                         <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                             <Row className="form-group">
                                 <Label htmlFor="firstname" md={2}>First Name</Label>
