@@ -14,3 +14,6 @@ export const initialState = {
 export const Reducer = (state = initialState, action) => {
     return state;
 };
+
+
+//create seperate files.. dishes.js comments.js leaders.js and **remove this file **
