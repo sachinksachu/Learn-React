@@ -16,7 +16,7 @@ import { Comments } from './comments';
 import { Promotions } from './promotions';
 import { Leaders } from './leaders';
 
-import { InitialFeedback } from './forms';
+import { InitialFeedback } from './form';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
@@ -28,7 +28,7 @@ export const ConfigureStore = () => {
             promotions: Promotions,
             leaders: Leaders,
 
-             ...createForms({ // create forms will create a reducer but takes care of the form.
+             ...createForms({ // create forms will create a reducer that takes care of the form.
                 feedback: InitialFeedback
             })
         }),
