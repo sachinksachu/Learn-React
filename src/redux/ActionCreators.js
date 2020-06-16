@@ -154,3 +154,80 @@ export const addPromos = (promos) => ({
     type: ActionTypes.ADD_PROMOS,
     payload: promos
 });
+
+//leader
+export const fetchLeader = () => (dispatch) => {
+
+  dispatch(leaderLoading());
+
+  return fetch(baseUrl + 'leaders')
+  .then(response =>{
+    if(response.ok){
+      return response;
+    }
+    else{
+      var error = new Error('Error ' + response.status + ': ' + response.statusText);
+      error.response = response;
+      throw error;
+    }
+
+  },error => {
+    var errmess = new Error(error.message);
+    throw errmess;
+  })
+  .then(response => response.json())
+    .then(leaders => dispatch(addleader(leaders)))
+    .catch(error => dispatch(leaderFailed(error.message)));
+
+}
+
+export const leaderLoading = () => ({
+  type: ActionTypes.LEADERS_LOADING
+});
+
+export const leaderFailed = (errmess) => ({
+  type: ActionTypes.LEADERS_FAILED,
+  payload: errmess
+});
+
+export const addleader = (leaders) => ({
+  type: ActionTypes.ADD_LEADERS,
+  payload: leaders
+});
+
+//post feedback
+
+
+export const postFeedback = (feedback) => (dispatch) =>{
+  const newFeedback = Object.assign({ date: new Date().toISOString() }, feedback);
+
+  return fetch(baseUrl + 'feedback',{
+    method: 'POST',
+    body: JSON.stringify(newFeedback),
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  })
+
+  .then(response => {
+    if (response.ok) {
+        return response;
+    } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+    }
+  },
+    error => {
+      var errorMessage = new Error(error.errorMessage);
+      throw errorMessage;
+    }
+  )
+  .then(response => response.json())
+        .then(response => alert("Thank you for your feedback!" + JSON.stringify(response)))
+        .catch(error => {
+            console.log('Post feedback: ' + error.message);
+            alert('Feedback could not be posted:\n' + error.message)
+        })
+}

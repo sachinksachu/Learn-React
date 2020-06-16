@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
 import Main from './components/Main';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';

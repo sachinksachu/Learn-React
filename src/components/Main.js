@@ -1,9 +1,4 @@
 import React, {Component} from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
 import  Menu from './Menu';
 import  DishDetail from './DishDetail';
 import Header from './Header';
@@ -18,7 +13,7 @@ import { actions } from 'react-redux-form';
 
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
+import { postComment, fetchDishes, fetchComments, fetchPromos, fetchLeader,postFeedback } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {  //allow us to access number from our Redux state as a prop inside our component.
   return {
@@ -37,8 +32,10 @@ const mapDispatchToProps = dispatch => ({
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
   fetchComments: () => dispatch(fetchComments()),
   fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeader:() => dispatch(fetchLeader()),
 
-   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
+  // resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
+  postFeedback: (feedback) => dispatch(postFeedback(feedback))
 });
 
 
@@ -46,19 +43,14 @@ const mapDispatchToProps = dispatch => ({
 
 class Main extends Component {
 
-  constructor(props){
-    super(props);
-  }
-
  componentDidMount() {
     this.props.fetchDishes();
     this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeader();
   }
 
-  onDishSelect(dish) {
-        this.setState({ selectedDish: dish});
-    }
+ 
 
   render() {
 
@@ -69,10 +61,14 @@ class Main extends Component {
               dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
               dishesLoading={this.props.dishes.isLoading}
               dishErrMess={this.props.dishes.errMess}
+
               promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
               promoLoading={this.props.promotions.isLoading}
               promoErrMess={this.props.promotions.errMess}
-              leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+
+              leader={this.props.leaders.leaders.filter((leader) => leader.featured)[0]}
+              leaderLoading={this.props.leaders.isLoading}
+              leaderErrMess={this.props.leaders.errMess}
           />
       );
     }
@@ -99,10 +95,10 @@ class Main extends Component {
             <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
               <Switch location={this.props.location}>
                   <Route path='/home' component={HomePage} />
-                  <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />} />
+                  <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
                   <Route exact path='/menu' component={() => <Menu dishes={this.props.dishes} />} />
                   <Route path='/menu/:dishId' component={DishWithId} />
-                  <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
+                  <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} postFeedback={this.props.postFeedback}/>} />
                   <Redirect to="/home" />
               </Switch>
             </CSSTransition>
